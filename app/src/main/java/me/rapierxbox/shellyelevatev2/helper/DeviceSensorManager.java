@@ -85,7 +85,7 @@ public class DeviceSensorManager implements SensorEventListener {
                 ShellyElevateApplication.mDeviceHelper.setScreenBrightness(interpolated);
 
                 if (fraction < 1f) {
-                    fadeHandler.postDelayed(this, 20); // 50fps
+                    fadeHandler.postDelayed(this, 17); // 58.82fps (display is 58.67)
                 } else {
                     currentBrightness = to;
                 }
