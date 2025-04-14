@@ -68,8 +68,10 @@ public class DeviceSensorManager implements SensorEventListener {
             if (currentBrightness == -1) {
                 currentBrightness = targetBrightness;
                 ShellyElevateApplication.mDeviceHelper.setScreenBrightness(currentBrightness);
-            } else {
+            } else if (currentBrightness != targetBrightness) {
                 animateBrightnessTransition(currentBrightness, targetBrightness, FADE_DURATION_MS);
+            } else {
+                Log.d(TAG, "No brightness change needed.");
             }
         }
     }
