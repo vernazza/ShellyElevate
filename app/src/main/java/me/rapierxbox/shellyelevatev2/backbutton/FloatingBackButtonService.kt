@@ -2,7 +2,10 @@ package me.rapierxbox.shellyelevatev2.backbutton
 
 import android.annotation.SuppressLint
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.PixelFormat
 import android.os.Build
@@ -16,9 +19,25 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.edit
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import me.rapierxbox.shellyelevatev2.Constants.INTENT_SCREEN_SAVER_STARTED
+import me.rapierxbox.shellyelevatev2.Constants.INTENT_SCREEN_SAVER_STOPPED
 import me.rapierxbox.shellyelevatev2.R
 
 class FloatingBackButtonService : Service() {
+
+    private val myLocalBroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            // Check for the specific action you're interested in
+            when (intent?.action) {
+                //When the screen saver starts, we pause the floating point
+                INTENT_SCREEN_SAVER_STARTED -> pauseFloatingButton()
+
+                //When the screen saver stops, we resume the floating point (we show it if it was visible)
+                INTENT_SCREEN_SAVER_STOPPED -> resumeFloatingButton()
+            }
+        }
+    }
 
     private lateinit var windowManager: WindowManager
     private var floatingView: View? = null
@@ -40,6 +59,12 @@ class FloatingBackButtonService : Service() {
         super.onCreate()
         prefs = getSharedPreferences(FLOATING_BUTTON_PREFS, MODE_PRIVATE)
         showFloatingButton()
+
+        val intentFilter = IntentFilter().apply {
+            addAction(INTENT_SCREEN_SAVER_STOPPED)
+            addAction(INTENT_SCREEN_SAVER_STARTED)
+        }
+        LocalBroadcastManager.getInstance(this).registerReceiver(myLocalBroadcastReceiver, intentFilter)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -48,8 +73,7 @@ class FloatingBackButtonService : Service() {
         when (intent?.action) {
             SHOW_FLOATING_BUTTON -> showFloatingButton()
             HIDE_FLOATING_BUTTON -> hideFloatingButton()
-            PAUSE_BUTTON -> pauseFloatingButton()
-            RESUME_BUTTON -> resumeFloatingButton()
+
             else -> showFloatingButton()
         }
         return START_STICKY
@@ -67,10 +91,8 @@ class FloatingBackButtonService : Service() {
         val layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            else
-                WindowManager.LayoutParams.TYPE_PHONE,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            else WindowManager.LayoutParams.TYPE_PHONE,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             PixelFormat.TRANSLUCENT
         )
@@ -149,6 +171,7 @@ class FloatingBackButtonService : Service() {
     override fun onDestroy() {
         hideFloatingButton()
         super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myLocalBroadcastReceiver)
     }
 
 
@@ -157,8 +180,6 @@ class FloatingBackButtonService : Service() {
     companion object {
         const val SHOW_FLOATING_BUTTON = "SHOW_FLOATING_BUTTON"
         const val HIDE_FLOATING_BUTTON = "HIDE_FLOATING_BUTTON"
-        const val PAUSE_BUTTON = "PAUSE_BUTTON"
-        const val RESUME_BUTTON = "RESUME_BUTTON"
 
         const val POS_X = "pos_x"
         const val POS_Y = "pos_y"

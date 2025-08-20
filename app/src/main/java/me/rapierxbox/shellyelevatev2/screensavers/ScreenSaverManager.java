@@ -41,7 +41,6 @@ public class ScreenSaverManager extends BroadcastReceiver {
     }
 
     public ScreenSaverManager(Context ctx) {
-
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleWithFixedDelay(this::checkLastTouchEventTime, 0, 1, TimeUnit.SECONDS);
 
@@ -96,10 +95,6 @@ public class ScreenSaverManager extends BroadcastReceiver {
 
             //Let everyone know we are starting the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STARTED));
-
-            Intent backButtonIntent = new Intent(mApplicationContext, FloatingBackButtonService.class);
-            backButtonIntent.setAction(FloatingBackButtonService.PAUSE_BUTTON);
-            mApplicationContext.startService(backButtonIntent);
         }
     }
 
@@ -114,10 +109,6 @@ public class ScreenSaverManager extends BroadcastReceiver {
 
             //Let everyone know we are stopping the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STOPPED));
-
-            Intent backButtonIntent = new Intent(mApplicationContext, FloatingBackButtonService.class);
-            backButtonIntent.setAction(FloatingBackButtonService.RESUME_BUTTON);
-            mApplicationContext.startService(backButtonIntent);
         }
 
 

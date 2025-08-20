@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
         setupSettingsButtons()
 
         binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
-            mSwipeHelper.onTouchEvent(this,event)
+            mSwipeHelper.onTouchEvent(this, event)
             mScreenSaverManager.onTouchEvent(event)
             binding.myWebView.onTouchEvent(event)
 
