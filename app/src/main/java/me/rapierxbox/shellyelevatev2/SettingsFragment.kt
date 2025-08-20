@@ -207,6 +207,7 @@ class SettingsFragment : Fragment() {
         binding.screenSaverDelayLayout.isVisible = binding.screenSaver.isChecked
         binding.screenSaverTypeLayout.isVisible = binding.screenSaver.isChecked
         binding.wakeOnProximity.isVisible = binding.screenSaver.isChecked && device.hasProximitySensor
+        binding.minBrightnessScreenSaverLayout.isVisible = binding.screenSaver.isChecked
 
         //Brightness management
         binding.brightnessSettingLayout.isVisible = !binding.automaticBrightness.isChecked
@@ -256,6 +257,8 @@ class SettingsFragment : Fragment() {
         binding.screenSaver.setOnCheckedChangeListener { _, isChecked ->
             binding.screenSaverDelayLayout.isVisible = isChecked
             binding.screenSaverTypeLayout.isVisible = isChecked
+            binding.wakeOnProximity.isVisible = isChecked
+            binding.minBrightnessScreenSaverLayout.isVisible = isChecked
         }
 
         binding.screenSaverDelay.setOnEditorActionListener { _, actionId, _ ->
