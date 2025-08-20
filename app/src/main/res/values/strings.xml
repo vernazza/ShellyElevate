@@ -3,7 +3,7 @@
 
     <!-- Sync Preferences -->
     <string name="findIPButtonText">Search for HA URL</string>
-    <string name="switchOnSwipeText">Switch on swipe</string>
+    <string name="switchOnSwipeText">Switch relay on swipe</string>
     <string name="automaticBrightnessText">Automatic Brightness</string>
     <string name="ScreenSaverText">Screen Saver</string>
     <string name="http_server_status_default">Status:</string>
@@ -12,11 +12,11 @@
     <string name="screen_saver_delay">Delay</string>
     <string name="screen_saver_delay_hint">45</string>
     <string name="screenSaverTypeText">Type</string>
-    <string name="http_server_enabled">HTTP Server enabled:</string>
+    <string name="http_server_enabled">HTTP server</string>
     <string name="http_server_address">Address:</string>
     <string name="extended_js_interface">Extended JS Interface</string>
     <string name="brightness">Brightness</string>
-    <string name="mqtt">MQTT</string>
+    <string name="mqtt">MQTT server</string>
     <string name="broker_address">Broker address</string>
     <string name="http_server_running">Running</string>
     <string name="http_server_not_running">Not running</string>
@@ -35,7 +35,7 @@
     <string name="accessibility_description">This service will show a \"Back\" button when ShellyElevate is not visible.</string>
     <string name="accessibility_service_not_enabled">Enable accessibility service to continue</string>
     <string name="min_brightness">Minimum brightness</string>
-    <string name="device">Device</string>
+    <string name="device">Device model</string>
     <string name="floating_back_button">Floating Back Button</string>
     <string name="reboot">Reboot</string>
     <string name="B_exit">Exit</string>

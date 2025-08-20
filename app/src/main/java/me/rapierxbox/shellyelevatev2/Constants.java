@@ -7,13 +7,13 @@ public class Constants {
     public static final String SP_DEVICE = "device";
     public static final String SP_LITE_MODE = "liteMode";
     public static final String SP_SETTINGS_EVER_SHOWN = "settingEverShown";
+    public static final String SP_EXTENDED_JAVASCRIPT_INTERFACE = "extendedJavascriptInterface";
 
     //IO SP Keys
     public static final String SP_SWITCH_ON_SWIPE = "switchOnSwipe";
 
     //Webserver SP Keys
     public static final String SP_HTTP_SERVER_ENABLED = "httpServer";
-    public static final String SP_EXTENDED_JAVASCRIPT_INTERFACE = "extendedJavascriptInterface";
 
     //HA SP Keys
     public static final String SP_WEBVIEW_URL = "webviewUrl";

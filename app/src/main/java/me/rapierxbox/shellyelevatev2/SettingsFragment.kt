@@ -132,7 +132,7 @@ class SettingsFragment : Fragment() {
 
                 if (updateInfo.version > BuildConfig.VERSION_NAME) {
                     _binding?.update?.apply {
-                        setText(getString(R.string.update_available, updateInfo.version))
+                        text = getString(R.string.update_available, updateInfo.version)
 
                         setOnClickListener {
                             activity?.let {
@@ -203,6 +203,13 @@ class SettingsFragment : Fragment() {
         binding.httpServerStatus.text = getString(if (mHttpServer.isAlive) R.string.http_server_running else R.string.http_server_not_running)
 
         //Update Visibility
+
+        //WebView
+        binding.webviewURL.isVisible = !binding.liteMode.isChecked
+        binding.ignoreSslErrors.isVisible = !binding.liteMode.isChecked
+        binding.extendedJavascriptInterface.isVisible = !binding.liteMode.isChecked
+        binding.findURLButton.isVisible = !binding.liteMode.isChecked
+
         //ScreenSaver
         binding.screenSaverDelayLayout.isVisible = binding.screenSaver.isChecked
         binding.screenSaverTypeLayout.isVisible = binding.screenSaver.isChecked
@@ -229,6 +236,14 @@ class SettingsFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupListeners() {
+
+        binding.liteMode.setOnCheckedChangeListener { _, isChecked ->
+            binding.webviewURL.isVisible = !isChecked
+            binding.ignoreSslErrors.isVisible = !isChecked
+            binding.extendedJavascriptInterface.isVisible = !isChecked
+            binding.findURLButton.isVisible = !isChecked
+        }
+
         binding.findURLButton.setOnClickListener {
             ServiceHelper.getHAURL(requireContext().applicationContext) { url ->
                 requireActivity().runOnUiThread { binding.webviewURL.setText(url) }
@@ -319,8 +334,8 @@ class SettingsFragment : Fragment() {
 
             //WebView
             putString(SP_WEBVIEW_URL, binding.webviewURL.text.toString())
-            putBoolean(SP_EXTENDED_JAVASCRIPT_INTERFACE, binding.extendedJavascriptInterface.isChecked)
             putBoolean(SP_IGNORE_SSL_ERRORS, binding.ignoreSslErrors.isChecked)
+            putBoolean(SP_EXTENDED_JAVASCRIPT_INTERFACE, binding.extendedJavascriptInterface.isChecked)
 
             //MQTT
             putBoolean(SP_MQTT_ENABLED, binding.mqttEnabled.isChecked)
