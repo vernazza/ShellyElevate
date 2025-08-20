@@ -19,437 +19,529 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <LinearLayout
-                android:id="@+id/deviceTypeLinearLayout"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:orientation="horizontal">
+                app:contentPadding="16dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/deviceTypeLinearLayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/device"
-                    android:textSize="18sp" />
+                    android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/deviceTypeSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dialog" />
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/device"
+                        android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/findURLButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/findIPButtonText"
-                android:textSize="18sp" />
+                    <Spinner
+                        android:id="@+id/deviceTypeSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            <EditText
-                android:id="@+id/webviewURL"
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:hint="@string/homeAssistantIpEditTextPreviewIp"
-                android:imeOptions="actionDone"
-                android:inputType="textUri"
-                android:textSize="18sp" />
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/ignoreSslErrors"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/liteMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/lite_mode"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <Button
+                        android:id="@+id/findURLButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/findIPButtonText"
+                        android:textSize="18sp" />
+
+                    <EditText
+                        android:id="@+id/webviewURL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:hint="@string/homeAssistantIpEditTextPreviewIp"
+                        android:imeOptions="actionDone"
+                        android:inputType="textUri"
+                        android:textSize="18sp" />
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/ignoreSslErrors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/ignore_ssl_errors"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:text="@string/ignore_ssl_errors"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switchOnSwipe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/switchOnSwipeText"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/automaticBrightness"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/automaticBrightnessText"
-                android:textSize="18sp" />
-
-            <LinearLayout
-                android:id="@+id/minBrightnessLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switchOnSwipe"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/min_brightness"
-                    android:textSize="18sp" />
-
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/min_brightness"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:valueFrom="1"
-                    android:valueTo="255" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/brightnessSettingLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/brightness"
-                    android:textSize="18sp" />
-
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/brightnessSetting"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:valueFrom="1"
-                    android:valueTo="255" />
-
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/screenSaver"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/ScreenSaverText"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:id="@+id/screenSaverDelayLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/screen_saver_delay"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/screenSaverDelay"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/screen_saver_delay_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/screenSaverTypeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/screenSaverTypeText"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:id="@+id/screenSaverType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:spinnerMode="dialog" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/min_brightness_screen_saver_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/min_brightness"
-                    android:textSize="18sp" />
-
-                <com.google.android.material.slider.Slider
-                    android:id="@+id/screensaver_min_brightness"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:valueFrom="1"
-                    android:valueTo="255" />
-
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/wakeOnProximity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/wake_on_proximity"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/httpServerEnabled"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/http_server_enabled"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:id="@+id/httpServerAddressLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/http_server_address"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/httpServerAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="0dp"
+                    android:text="@string/switchOnSwipeText"
                     android:textSize="18sp"
-                    tools:text="http://127.0.0.1:8080" />
-            </LinearLayout>
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+            </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:id="@+id/httpServerLayout"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="12dp"
+                app:contentPaddingTop="12dp">
 
-                <TextView
-                    android:id="@+id/httpServerText"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/http_server_status_default"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/httpServerStatus"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:textSize="18sp"
-                    tools:text="@string/http_server_running" />
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/automaticBrightness"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/automaticBrightnessText"
+                        android:textSize="18sp" />
 
-                <Button
-                    android:id="@+id/httpServerButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="0dp"
-                    android:text="@string/start"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/minBrightnessLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/extendedJavascriptInterface"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/min_brightness"
+                            android:textSize="18sp" />
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/min_brightness"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:valueFrom="1"
+                            android:valueTo="255" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/brightnessSettingLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/brightness"
+                            android:textSize="18sp" />
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/brightnessSetting"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:valueFrom="1"
+                            android:valueTo="255" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/extended_js_interface"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="12dp"
+                app:contentPaddingTop="12dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/mqttEnabled"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/screenSaver"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/ScreenSaverText"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <LinearLayout
+                        android:id="@+id/screenSaverDelayLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/screen_saver_delay"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/screenSaverDelay"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/screen_saver_delay_hint"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/screenSaverTypeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/screenSaverTypeText"
+                            android:textSize="18sp" />
+
+                        <Spinner
+                            android:id="@+id/screenSaverType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:spinnerMode="dialog" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/min_brightness_screen_saver_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="@string/min_brightness"
+                            android:textSize="18sp" />
+
+                        <com.google.android.material.slider.Slider
+                            android:id="@+id/screensaver_min_brightness"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:valueFrom="1"
+                            android:valueTo="255" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/wakeOnProximity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/wake_on_proximity"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/mqtt"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="12dp"
+                app:contentPaddingTop="12dp">
 
-            <LinearLayout
-                android:id="@+id/mqttBrokerLayout"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/httpServerEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/http_server_enabled"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    <LinearLayout
+                        android:id="@+id/httpServerAddressLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/http_server_address"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/httpServerAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="0dp"
+                            android:textSize="18sp"
+                            tools:text="http://127.0.0.1:8080" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/httpServerLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/httpServerText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/http_server_status_default"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/httpServerStatus"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:textSize="18sp"
+                            tools:text="@string/http_server_running" />
+
+                        <Button
+                            android:id="@+id/httpServerButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="0dp"
+                            android:text="@string/start"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/extendedJavascriptInterface"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/extended_js_interface"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="12dp"
+                app:contentPaddingTop="12dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/broker_address"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/mqttBroker"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mqttbroker_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="textUri"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/mqttEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:text="@string/mqtt"
+                        android:textSize="18sp"
+                        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-            <LinearLayout
-                android:id="@+id/mqttPortLayout"
+                    <LinearLayout
+                        android:id="@+id/mqttBrokerLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/broker_address"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/mqttBroker"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/mqttbroker_hint"
+                            android:imeOptions="actionDone"
+                            android:inputType="textUri"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mqttPortLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/broker_port"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/mqttPort"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:hint="1883"
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:textSize="18sp"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mqttUsernameLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/username"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/mqttUsername"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/mqtt_username_hint"
+                            android:imeOptions="actionDone"
+                            android:inputType="text"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/mqttPasswordLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/password"
+                            android:textSize="18sp" />
+
+                        <EditText
+                            android:id="@+id/mqttPassword"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/mqtt_password_hint"
+                            android:imeOptions="actionDone"
+                            android:inputType="textVisiblePassword"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="24dp"
+                app:contentPadding="16dp"
+                app:contentPaddingBottom="12dp"
+                app:contentPaddingTop="12dp">
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/broker_port"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/mqttPort"
-                    android:layout_width="60dp"
-                    android:layout_height="wrap_content"
-                    android:hint="1883"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:textSize="18sp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/mqttUsernameLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/currentVersion"
+                            android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/username"
-                    android:textSize="18sp" />
+                        <TextView
+                            android:id="@+id/current_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="textEnd"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
-                <EditText
-                    android:id="@+id/mqttUsername"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mqtt_username_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/update"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="4dp"
+                        android:enabled="false"
+                        android:orientation="horizontal"
+                        android:text="@string/fetching_update_data" />
 
-            <LinearLayout
-                android:id="@+id/mqttPasswordLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/password"
-                    android:textSize="18sp" />
-
-                <EditText
-                    android:id="@+id/mqttPassword"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mqtt_password_hint"
-                    android:imeOptions="actionDone"
-                    android:inputType="textVisiblePassword"
-                    android:textSize="18sp" />
-            </LinearLayout>
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/liteMode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/lite_mode"
-                android:textSize="18sp"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/currentVersion"
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/current_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="textEnd"
-                    android:textStyle="bold"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/update"
-                android:text="@string/fetching_update_data"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:enabled="false"
-                android:orientation="horizontal">
-            </Button>
-
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
     </ScrollView>

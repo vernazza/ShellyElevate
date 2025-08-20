@@ -20,7 +20,11 @@ import androidx.core.content.edit
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.rapierxbox.shellyelevatev2.Constants.INTENT_SETTINGS_CHANGED
 import me.rapierxbox.shellyelevatev2.Constants.SHARED_PREFERENCES_NAME
 import me.rapierxbox.shellyelevatev2.Constants.SP_AUTOMATIC_BRIGHTNESS
@@ -117,27 +121,27 @@ class SettingsFragment : Fragment() {
             val updateInfo = withContext(Dispatchers.IO) {
                 UpdateManager.fetchLatestUpdateInfo()
             }
-        if (updateInfo != null) {
+            if (updateInfo != null) {
 
-            if (updateInfo.version > BuildConfig.VERSION_NAME) {
-                _binding?.update?.apply {
-                        setText(getString(R.string.update_available, updateInfo.version))
+                if (updateInfo.version > BuildConfig.VERSION_NAME) {
+                    _binding?.update?.apply {
+                        text = getString(R.string.update_available, updateInfo.version)
 
-                    setOnClickListener {
-                        activity?.let {
-                            UpdateManager.promptAndDownloadUpdate(it, updateInfo)
+                        setOnClickListener {
+                            activity?.let {
+                                UpdateManager.promptAndDownloadUpdate(it, updateInfo)
+                            }
                         }
-                    }
 
-                    isEnabled = true
-                }
-            } else {
-                _binding?.update?.apply {
-                    setText(R.string.you_have_latest_version)
+                        isEnabled = true
+                    }
+                } else {
+                    _binding?.update?.apply {
+                        setText(R.string.you_have_latest_version)
+                    }
                 }
             }
         }
-    }
     }
 
     private fun loadValues() {
@@ -185,6 +189,13 @@ class SettingsFragment : Fragment() {
         binding.httpServerStatus.text = getString(if (mHttpServer.isAlive) R.string.http_server_running else R.string.http_server_not_running)
 
         //Update Visibility
+
+        //WebView
+        binding.webviewURL.isVisible = !binding.liteMode.isChecked
+        binding.ignoreSslErrors.isVisible = !binding.liteMode.isChecked
+        binding.extendedJavascriptInterface.isVisible = !binding.liteMode.isChecked
+        binding.findURLButton.isVisible = !binding.liteMode.isChecked
+
         //ScreenSaver
         binding.screenSaverDelayLayout.isVisible = binding.screenSaver.isChecked
         binding.screenSaverTypeLayout.isVisible = binding.screenSaver.isChecked
@@ -210,6 +221,14 @@ class SettingsFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupListeners() {
+
+        binding.liteMode.setOnCheckedChangeListener { _, isChecked ->
+            binding.webviewURL.isVisible = !isChecked
+            binding.ignoreSslErrors.isVisible = !isChecked
+            binding.extendedJavascriptInterface.isVisible = !isChecked
+            binding.findURLButton.isVisible = !isChecked
+        }
+
         binding.findURLButton.setOnClickListener {
             ServiceHelper.getHAURL(requireContext().applicationContext) { url ->
                 requireActivity().runOnUiThread { binding.webviewURL.setText(url) }
@@ -298,8 +317,8 @@ class SettingsFragment : Fragment() {
 
             //WebView
             putString(SP_WEBVIEW_URL, binding.webviewURL.text.toString())
-            putBoolean(SP_EXTENDED_JAVASCRIPT_INTERFACE, binding.extendedJavascriptInterface.isChecked)
             putBoolean(SP_IGNORE_SSL_ERRORS, binding.ignoreSslErrors.isChecked)
+            putBoolean(SP_EXTENDED_JAVASCRIPT_INTERFACE, binding.extendedJavascriptInterface.isChecked)
 
             //MQTT
             putBoolean(SP_MQTT_ENABLED, binding.mqttEnabled.isChecked)
