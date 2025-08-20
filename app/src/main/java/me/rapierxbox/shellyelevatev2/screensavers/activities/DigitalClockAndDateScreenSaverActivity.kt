@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class DigitalClockAndDateScreenSaverActivity : Activity() {
-    private var binding: DigitalClockAndDateScreenSaverBinding ?= null // Declare the binding object
+    private lateinit var binding: DigitalClockAndDateScreenSaverBinding // Declare the binding object
 
     private val timeFormatter = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT)
     private val dateFormatter = SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM)
@@ -38,10 +38,9 @@ class DigitalClockAndDateScreenSaverActivity : Activity() {
 
     private fun updateTime() {
         val now = Date()
-        binding!!.clockText.text = timeFormatter.format(now)
+        binding.clockText.text = timeFormatter.format(now)
 
-        if (showDate)
-            binding!!.dateText.text = dateFormatter.format(now)
+        if (showDate) binding.dateText.text = dateFormatter.format(now)
     }
 
     @SuppressLint("ClickableViewAccessibility", "UnspecifiedRegisterReceiverFlag")
@@ -51,15 +50,15 @@ class DigitalClockAndDateScreenSaverActivity : Activity() {
         showDate = intent.getBooleanExtra("date", false)
 
         binding = DigitalClockAndDateScreenSaverBinding.inflate(layoutInflater) // Inflate the binding
-        setContentView(binding!!.root) // Set the content view using binding.root
+        setContentView(binding.root) // Set the content view using binding.root
 
-        binding!!.dateText.isVisible = showDate
+        binding.dateText.isVisible = showDate
 
         updateTime()
 
-        binding!!.swipeDetectionOverlay.setOnTouchListener { _, event ->
+        binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
             Log.d("DigitalClockAndDateScreenSaverActivity", "Received touch event: $event")
-            ShellyElevateApplication.mSwipeHelper.onTouchEvent(event)
+            ShellyElevateApplication.mSwipeHelper.onTouchEvent(this, event)
             mScreenSaverManager.onTouchEvent(event)
 
             true
@@ -74,6 +73,5 @@ class DigitalClockAndDateScreenSaverActivity : Activity() {
 
         unregisterReceiver(mTimeTickBroadCastReciver)
         unregisterReceiver(mEndScreenSaverReciever)
-        binding = null
     }
 }

@@ -52,6 +52,9 @@ public class Constants {
     public static final String INTENT_PROXIMITY_UPDATED = "me.rapierxbox.shellyelevatev2.PROXIMITY_UPDATED";
     public static final String INTENT_PROXIMITY_KEY = "proximityValue";
 
+    public static final String INTENT_RELAY_UPDATED = "me.rapierxbox.shellyelevatev2.RELAY_UPDATED";
+    public static final String INTENT_RELAY_STATUS_KEY = "relayStatus";
+
     //Screen Intents
     public static final String INTENT_TURN_SCREEN_ON = "me.rapierxbox.shellyelevatev2.INTENT_TURN_SCREEN_ON";
     public static final String INTENT_TURN_SCREEN_OFF = "me.rapierxbox.shellyelevatev2.INTENT_TURN_SCREEN_OFF";
@@ -60,6 +63,8 @@ public class Constants {
     public static final String ACTION_USER_INTERACTION = "shellyelevate.ACTION_USER_INTERACTION";
     public static final String INTENT_SETTINGS_CHANGED = "me.rapierxbox.shellyelevatev2.SETTINGS_CHANGED";
     public static final String INTENT_WEBVIEW_INJECT_JAVASCRIPT = "me.rapierxbox.shellyelevatev2.WEBVIEW_INJECT_JAVASCRIPT";
+    public static final String INTENT_SWIPE_OCCURRED = "me.rapierxbox.shellyelevatev2.SWIPE_OCCURRED";
+
 
     //MQTT Topics
     public static final String MQTT_TOPIC_CONFIG_DEVICE = "homeassistant/device/%s/config";

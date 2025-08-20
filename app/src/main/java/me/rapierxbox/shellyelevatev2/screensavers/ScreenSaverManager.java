@@ -11,7 +11,6 @@ import static me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_ENABLED;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_ID;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_WAKE_ON_PROXIMITY;
 import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mApplicationContext;
-import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mMQTTServer;
 import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSharedPreferences;
 
 import android.content.BroadcastReceiver;
@@ -93,10 +92,6 @@ public class ScreenSaverManager extends BroadcastReceiver {
             screenSavers[mSharedPreferences.getInt(SP_SCREEN_SAVER_ID, 0)].onStart(mApplicationContext);
             Log.i("ShellyElevateV2", "Starting screen saver with id: " + mSharedPreferences.getInt(SP_SCREEN_SAVER_ID, 0));
 
-            if (mMQTTServer.shouldSend()) {
-                mMQTTServer.publishSleeping(true);
-            }
-
             //Let everyone know we are starting the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STARTED));
         }
@@ -110,10 +105,6 @@ public class ScreenSaverManager extends BroadcastReceiver {
 
             lastTouchEventTime = System.currentTimeMillis();
             Log.i("ShellyElevateV2", "Ending screen saver with id: " + mSharedPreferences.getInt(SP_SCREEN_SAVER_ID, 0));
-
-            if (mMQTTServer.shouldSend()) {
-                mMQTTServer.publishSleeping(false);
-            }
 
             //Let everyone know we are stopping the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STOPPED));

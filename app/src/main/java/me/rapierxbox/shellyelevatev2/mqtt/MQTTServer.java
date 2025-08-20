@@ -1,6 +1,15 @@
 package me.rapierxbox.shellyelevatev2.mqtt;
 
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_LIGHT_KEY;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_LIGHT_UPDATED;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_PROXIMITY_KEY;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_PROXIMITY_UPDATED;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_RELAY_STATUS_KEY;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_RELAY_UPDATED;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_SCREEN_SAVER_STARTED;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_SCREEN_SAVER_STOPPED;
 import static me.rapierxbox.shellyelevatev2.Constants.INTENT_SETTINGS_CHANGED;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_SWIPE_OCCURRED;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_CONFIG_DEVICE;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_HOME_ASSISTANT_STATUS;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_HUM_SENSOR;
@@ -16,7 +25,6 @@ import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_STATUS;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_SWIPE_EVENT;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_TEMP_SENSOR;
 import static me.rapierxbox.shellyelevatev2.Constants.MQTT_TOPIC_WAKE_BUTTON;
-import static me.rapierxbox.shellyelevatev2.Constants.SP_DEVICE;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_MQTT_BROKER;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_MQTT_DEVICE_ID;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_MQTT_ENABLED;
@@ -52,7 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.rapierxbox.shellyelevatev2.DeviceModel;
 
-public class MQTTServer {
+public class MQTTServer extends BroadcastReceiver {
     private MqttClient mMqttClient;
     private final MemoryPersistence mMemoryPersistence;
     private final ShellyElevateMQTTCallback mShellyElevateMQTTCallback;
@@ -69,13 +77,19 @@ public class MQTTServer {
         mMqttConnectionsOptions = new MqttConnectionOptions();
 
         LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(mApplicationContext);
-        BroadcastReceiver settingsChangedBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                checkCredsAndConnect();
-            }
-        };
-        localBroadcastManager.registerReceiver(settingsChangedBroadcastReceiver, new IntentFilter(INTENT_SETTINGS_CHANGED));
+
+        IntentFilter intentFilter = new IntentFilter();
+
+        intentFilter.addAction(INTENT_SETTINGS_CHANGED);
+
+        intentFilter.addAction(INTENT_LIGHT_UPDATED);
+        intentFilter.addAction(INTENT_PROXIMITY_UPDATED);
+        intentFilter.addAction(INTENT_RELAY_UPDATED);
+        intentFilter.addAction(INTENT_SCREEN_SAVER_STARTED);
+        intentFilter.addAction(INTENT_SCREEN_SAVER_STOPPED);
+        intentFilter.addAction(INTENT_SWIPE_OCCURRED);
+
+        localBroadcastManager.registerReceiver(this, intentFilter);
 
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleWithFixedDelay(this::publishTempAndHum, 0, 5, TimeUnit.SECONDS);
@@ -91,14 +105,36 @@ public class MQTTServer {
         checkCredsAndConnect();
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        if (action == null)
+            return;
+
+        if (action.equals(INTENT_SETTINGS_CHANGED)){
+            checkCredsAndConnect();
+            return;
+        }
+
+        if (!shouldSend())
+            return;
+
+        switch (action) {
+            case INTENT_LIGHT_UPDATED -> publishLux(intent.getFloatExtra(INTENT_LIGHT_KEY, 0.0f));
+            case INTENT_PROXIMITY_UPDATED -> publishProximity(intent.getFloatExtra(INTENT_PROXIMITY_KEY, 0.0f));
+            case INTENT_RELAY_UPDATED -> publishRelay(intent.getBooleanExtra(INTENT_RELAY_STATUS_KEY, false));
+            case INTENT_SCREEN_SAVER_STARTED -> publishSleeping(true);
+            case INTENT_SCREEN_SAVER_STOPPED -> publishSleeping(false);
+            case INTENT_SWIPE_OCCURRED -> publishSwipeEvent();
+        }
+    }
+
     public void checkCredsAndConnect() {
         if (!mSharedPreferences.getBoolean(SP_MQTT_ENABLED, false)) {
             return;
         }
 
-        validForConnection = !mSharedPreferences.getString(SP_MQTT_PASSWORD, "").isEmpty() &&
-                !mSharedPreferences.getString(SP_MQTT_USERNAME, "").isEmpty() &&
-                !mSharedPreferences.getString(SP_MQTT_BROKER, "").isEmpty();
+        validForConnection = !mSharedPreferences.getString(SP_MQTT_PASSWORD, "").isEmpty() && !mSharedPreferences.getString(SP_MQTT_USERNAME, "").isEmpty() && !mSharedPreferences.getString(SP_MQTT_BROKER, "").isEmpty();
 
         connect();
     }
@@ -191,7 +227,7 @@ public class MQTTServer {
         }
     }
 
-    public void publishLux(float lux) {
+    private void publishLux(float lux) {
         try {
             mMqttClient.publish(parseTopic(MQTT_TOPIC_LUX_SENSOR), String.valueOf(lux).getBytes(), 1, false);
         } catch (MqttException e) {
@@ -199,7 +235,7 @@ public class MQTTServer {
         }
     }
 
-    public void publishProximity(float distance) {
+    private void publishProximity(float distance) {
         try {
             mMqttClient.publish(parseTopic(MQTT_TOPIC_PROXIMITY_SENSOR), String.valueOf(distance).getBytes(), 1, false);
         } catch (MqttException e) {
@@ -207,7 +243,7 @@ public class MQTTServer {
         }
     }
 
-    public void publishRelay(boolean state) {
+    private void publishRelay(boolean state) {
         try {
             mMqttClient.publish(parseTopic(MQTT_TOPIC_RELAY_STATE), (state ? "ON" : "OFF").getBytes(), 1, false);
         } catch (MqttException e) {
@@ -215,7 +251,7 @@ public class MQTTServer {
         }
     }
 
-    public void publishSleeping(boolean state) {
+    private void publishSleeping(boolean state) {
         try {
             mMqttClient.publish(parseTopic(MQTT_TOPIC_SLEEPING_BINARY_SENSOR), (state ? "ON" : "OFF").getBytes(), 1, false);
         } catch (MqttException e) {

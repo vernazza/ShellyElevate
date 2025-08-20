@@ -1,11 +1,15 @@
 package me.rapierxbox.shellyelevatev2.helper;
 
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_RELAY_STATUS_KEY;
+import static me.rapierxbox.shellyelevatev2.Constants.INTENT_RELAY_UPDATED;
 import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mApplicationContext;
-import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mMQTTServer;
 import static me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSharedPreferences;
 
+import android.content.Intent;
 import android.provider.Settings;
 import android.util.Log;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,18 +23,9 @@ import java.util.Objects;
 import me.rapierxbox.shellyelevatev2.DeviceModel;
 
 public class DeviceHelper {
-    private static final String[] possibleRelayFiles = {
-            "/sys/devices/platform/leds/green_enable",
-            "/sys/devices/platform/leds/red_enable",
-            "/sys/class/strelay/relay1",
-            "/sys/class/strelay/relay2"
-    };
+    private static final String[] possibleRelayFiles = {"/sys/devices/platform/leds/green_enable", "/sys/devices/platform/leds/red_enable", "/sys/class/strelay/relay1", "/sys/class/strelay/relay2"};
     private static final String tempAndHumFile = "/sys/devices/platform/sht3x-user/sht3x_access";
-    private static final String[] screenBrightnessFiles = {
-            "/sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness",
-            "/sys/devices/platform/sprd_backlight/backlight/sprd_backlight/brightness",
-            "/sys/devices/platform/backlight/backlight/backlight/brightness"
-            };
+    private static final String[] screenBrightnessFiles = {"/sys/devices/platform/leds-mt65xx/leds/lcd-backlight/brightness", "/sys/devices/platform/sprd_backlight/backlight/sprd_backlight/brightness", "/sys/devices/platform/backlight/backlight/backlight/brightness"};
     private String screenBrightnessFile;
     private final String[] relayFiles;
     private boolean screenOn = true;
@@ -113,9 +108,11 @@ public class DeviceHelper {
         for (String relayFile : relayFiles) {
             writeFileContent(relayFile, state ? "1" : "0");
         }
-        if (mMQTTServer.shouldSend()) {
-            mMQTTServer.publishRelay(state);
-        }
+
+        //Let everyone know we updated the relay status
+        Intent intent = new Intent(INTENT_RELAY_UPDATED);
+        intent.putExtra(INTENT_RELAY_STATUS_KEY, state);
+        LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(intent));
     }
 
     public double getTemperature() {
