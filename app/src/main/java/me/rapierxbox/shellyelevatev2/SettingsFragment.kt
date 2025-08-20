@@ -110,6 +110,34 @@ class SettingsFragment : Fragment() {
         binding.screenSaverType.adapter = getScreenSaverSpinnerAdapter()
         loadValues()
         setupListeners()
+
+        binding.currentVersion.text = BuildConfig.VERSION_NAME
+
+        lifecycleScope.launch {
+            val updateInfo = withContext(Dispatchers.IO) {
+                UpdateManager.fetchLatestUpdateInfo()
+            }
+        if (updateInfo != null) {
+
+            if (updateInfo.version > BuildConfig.VERSION_NAME) {
+                _binding?.update?.apply {
+                        setText(getString(R.string.update_available, updateInfo.version))
+
+                    setOnClickListener {
+                        activity?.let {
+                            UpdateManager.promptAndDownloadUpdate(it, updateInfo)
+                        }
+                    }
+
+                    isEnabled = true
+                }
+            } else {
+                _binding?.update?.apply {
+                    setText(R.string.you_have_latest_version)
+                }
+            }
+        }
+    }
     }
 
     private fun loadValues() {

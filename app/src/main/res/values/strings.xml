@@ -41,4 +41,10 @@
     <string name="B_exit">Exit</string>
     <string name="wake_on_proximity">Wake on Proximity</string>
     <string name="ignore_ssl_errors">Ignore SSL Errors</string>
+    <string name="currentVersion">Current version</string>
+    <string name="fetching_update_data">Checking for update...</string>
+    <string name="update_available">Update to %s</string>
+    <string name="you_have_latest_version">Application already updated</string>
+    <string name="update">Update</string>
+    <string name="not_now">Not now</string>
 </resources>

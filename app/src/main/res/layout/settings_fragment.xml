@@ -418,6 +418,38 @@
                 android:textSize="18sp"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/currentVersion"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/current_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/update"
+                android:text="@string/fetching_update_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:enabled="false"
+                android:orientation="horizontal">
+            </Button>
+
         </LinearLayout>
 
     </ScrollView>
