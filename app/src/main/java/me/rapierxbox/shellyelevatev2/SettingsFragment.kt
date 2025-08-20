@@ -242,7 +242,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.swipeDetectionOverlay.setOnTouchListener { v, event ->
-            mSwipeHelper.onTouchEvent(event)
+            mSwipeHelper.onTouchEvent(activity, event)
             mScreenSaverManager.onTouchEvent(event)
 
             return@setOnTouchListener false
