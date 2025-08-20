@@ -17,10 +17,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.rapierxbox.shellyelevatev2.Constants.INTENT_SETTINGS_CHANGED
 import me.rapierxbox.shellyelevatev2.Constants.SHARED_PREFERENCES_NAME
 import me.rapierxbox.shellyelevatev2.Constants.SP_AUTOMATIC_BRIGHTNESS
@@ -48,6 +53,8 @@ import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mHttpServer
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mScreenSaverManager
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSharedPreferences
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSwipeHelper
+import me.rapierxbox.shellyelevatev2.backbutton.BackAccessibilityService
+import me.rapierxbox.shellyelevatev2.backbutton.FloatingBackButtonService
 import me.rapierxbox.shellyelevatev2.databinding.SettingsFragmentBinding
 import me.rapierxbox.shellyelevatev2.helper.ScreenManager.DEFAULT_BRIGHTNESS
 import me.rapierxbox.shellyelevatev2.helper.ScreenManager.MIN_BRIGHTNESS_DEFAULT
@@ -78,7 +85,9 @@ class SettingsFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_settings -> {
-                        startActivity(Intent(Settings.ACTION_SETTINGS))
+                        if (checkAccessibilityPermission()) {
+                            startActivity(Intent(Settings.ACTION_SETTINGS))
+                        }
                         true
                     }
 
@@ -93,8 +102,10 @@ class SettingsFragment : Fragment() {
                     }
 
                     R.id.action_exit -> {
-                        requireActivity().moveTaskToBack(true)
-                        requireActivity().finishAffinity()
+                        if (checkAccessibilityPermission()) {
+                            requireActivity().moveTaskToBack(true)
+                            requireActivity().finishAffinity()
+                        }
                         true
                     }
 
@@ -117,27 +128,34 @@ class SettingsFragment : Fragment() {
             val updateInfo = withContext(Dispatchers.IO) {
                 UpdateManager.fetchLatestUpdateInfo()
             }
-        if (updateInfo != null) {
+            if (updateInfo != null) {
 
-            if (updateInfo.version > BuildConfig.VERSION_NAME) {
-                _binding?.update?.apply {
+                if (updateInfo.version > BuildConfig.VERSION_NAME) {
+                    _binding?.update?.apply {
                         setText(getString(R.string.update_available, updateInfo.version))
 
-                    setOnClickListener {
-                        activity?.let {
-                            UpdateManager.promptAndDownloadUpdate(it, updateInfo)
+                        setOnClickListener {
+                            activity?.let {
+                                UpdateManager.promptAndDownloadUpdate(it, updateInfo)
+                            }
                         }
-                    }
 
-                    isEnabled = true
-                }
-            } else {
-                _binding?.update?.apply {
-                    setText(R.string.you_have_latest_version)
+                        isEnabled = true
+                    }
+                } else {
+                    _binding?.update?.apply {
+                        setText(R.string.you_have_latest_version)
+                    }
                 }
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val intent = Intent(activity, FloatingBackButtonService::class.java)
+        intent.action = FloatingBackButtonService.HIDE_FLOATING_BUTTON
+        activity?.startService(intent)
     }
 
     private fun loadValues() {
@@ -351,11 +369,31 @@ class SettingsFragment : Fragment() {
         val adapter = ArrayAdapter<String?>(ShellyElevateApplication.mApplicationContext, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
+
         for (screenSaver in ScreenSaverManager.getAvailableScreenSavers()) {
             adapter.add(screenSaver.getName())
         }
 
+
         return adapter
+    }
+
+    private fun checkAccessibilityPermission(): Boolean {
+        val act = activity ?: return false
+        act.startService(Intent(act, FloatingBackButtonService::class.java))
+        if (!Settings.canDrawOverlays(act)) {
+            Toast.makeText(act, "Please, grant overlay permission to show the floating back button", Toast.LENGTH_LONG).show()
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, "package:${act.packageName}".toUri())
+            startActivity(intent)
+            return false
+        }
+        if (!BackAccessibilityService.isAccessibilityEnabled(act)) {
+            Toast.makeText(act, "Please, grant accessibility permission to use the floating back button", Toast.LENGTH_LONG).show()
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            return false
+        }
+
+        return true
     }
 
     companion object {

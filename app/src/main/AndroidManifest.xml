@@ -18,7 +18,7 @@
         tools:ignore="HighSamplingRate" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.hardware.sensor.proximity"/>
+    <uses-permission android:name="android.hardware.sensor.proximity" />
 
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -34,7 +34,24 @@
         <receiver
             android:name=".screensavers.UserInteractionReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
+
+        <service
+            android:name=".backbutton.FloatingBackButtonService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".backbutton.BackAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
 
         <activity
             android:name=".MainActivity"

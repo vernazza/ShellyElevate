@@ -26,6 +26,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import me.rapierxbox.shellyelevatev2.backbutton.FloatingBackButtonService;
+
 public class ScreenSaverManager extends BroadcastReceiver {
     private long lastTouchEventTime;
     private boolean screenSaverRunning;
@@ -56,8 +58,8 @@ public class ScreenSaverManager extends BroadcastReceiver {
         if ((event == null || event.getAction() == ACTION_UP) && isScreenSaverRunning()) {
             stopScreenSaver();
         }
-        return true;
-    }
+            return true;
+        }
 
     public boolean isScreenSaverRunning() {
         return screenSaverRunning;
@@ -94,6 +96,10 @@ public class ScreenSaverManager extends BroadcastReceiver {
 
             //Let everyone know we are starting the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STARTED));
+
+            Intent backButtonIntent = new Intent(mApplicationContext, FloatingBackButtonService.class);
+            backButtonIntent.setAction(FloatingBackButtonService.PAUSE_BUTTON);
+            mApplicationContext.startService(backButtonIntent);
         }
     }
 
@@ -108,7 +114,13 @@ public class ScreenSaverManager extends BroadcastReceiver {
 
             //Let everyone know we are stopping the screensaver
             LocalBroadcastManager.getInstance(mApplicationContext).sendBroadcast(new Intent(INTENT_SCREEN_SAVER_STOPPED));
+
+            Intent backButtonIntent = new Intent(mApplicationContext, FloatingBackButtonService.class);
+            backButtonIntent.setAction(FloatingBackButtonService.RESUME_BUTTON);
+            mApplicationContext.startService(backButtonIntent);
         }
+
+
     }
 
     @Override
