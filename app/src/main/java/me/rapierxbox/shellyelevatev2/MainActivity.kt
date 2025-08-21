@@ -19,6 +19,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import me.rapierxbox.shellyelevatev2.Constants.INTENT_SETTINGS_CHANGED
 import me.rapierxbox.shellyelevatev2.Constants.INTENT_WEBVIEW_INJECT_JAVASCRIPT
 import me.rapierxbox.shellyelevatev2.Constants.SP_IGNORE_SSL_ERRORS
+import me.rapierxbox.shellyelevatev2.Constants.SP_LITE_MODE
 import me.rapierxbox.shellyelevatev2.Constants.SP_SETTINGS_EVER_SHOWN
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mScreenSaverManager
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSharedPreferences
@@ -130,24 +131,26 @@ class MainActivity : ComponentActivity() {
         binding = MainActivityBinding.inflate(layoutInflater) // Inflate the binding
         setContentView(binding.root) // Set the content view using binding.root
 
-        configureWebView()
-        setupSettingsButtons()
-
-        binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
-            mSwipeHelper.onTouchEvent(this, event)
-            mScreenSaverManager.onTouchEvent(event)
-            binding.myWebView.onTouchEvent(event)
-
-            return@setOnTouchListener true
-        }
-
-        LocalBroadcastManager.getInstance(this).apply {
-            registerReceiver(settingsChangedBroadcastReceiver, IntentFilter(INTENT_SETTINGS_CHANGED))
-            registerReceiver(webviewJavascriptInjectorBroadcastReceiver, IntentFilter(INTENT_WEBVIEW_INJECT_JAVASCRIPT))
-        }
-
-        if (!mSharedPreferences.getBoolean(SP_SETTINGS_EVER_SHOWN, false))
+        //Show settings if they haven't been shown before or if we selected LITE MODE
+        if (!mSharedPreferences.getBoolean(SP_SETTINGS_EVER_SHOWN, false) || mSharedPreferences.getBoolean(SP_LITE_MODE, false))
             startActivity(Intent(this, SettingsActivity::class.java))
+
+            configureWebView()
+            setupSettingsButtons()
+
+            binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
+                mSwipeHelper.onTouchEvent(this, event)
+                mScreenSaverManager.onTouchEvent(event)
+                binding.myWebView.onTouchEvent(event)
+
+                return@setOnTouchListener true
+            }
+
+            LocalBroadcastManager.getInstance(this).apply {
+                registerReceiver(settingsChangedBroadcastReceiver, IntentFilter(INTENT_SETTINGS_CHANGED))
+                registerReceiver(webviewJavascriptInjectorBroadcastReceiver, IntentFilter(INTENT_WEBVIEW_INJECT_JAVASCRIPT))
+            }
+
     }
 
     override fun onDestroy() {
