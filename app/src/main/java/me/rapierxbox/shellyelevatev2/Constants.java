@@ -9,6 +9,12 @@ public class Constants {
     public static final String SP_SETTINGS_EVER_SHOWN = "settingEverShown";
     public static final String SP_EXTENDED_JAVASCRIPT_INTERFACE = "extendedJavascriptInterface";
 
+    //Overlay Back Button
+    public static final String SP_SHOW_BACK_BUTTON = "backButtonOverlay";
+    public static final int BACK_BUTTON_NEVER = 0;
+    public static final int BACK_BUTTON_LITE = 1;
+    public static final int BACK_BUTTON_ALWAYS = 2;
+
     //IO SP Keys
     public static final String SP_SWITCH_ON_SWIPE = "switchOnSwipe";
 

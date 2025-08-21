@@ -24,7 +24,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp">
 
                 <LinearLayout
@@ -36,6 +36,7 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:text="@string/device"
                         android:textSize="18sp" />
@@ -44,6 +45,7 @@
                         android:id="@+id/deviceTypeSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
                         android:spinnerMode="dialog" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -52,7 +54,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp">
 
                 <LinearLayout
@@ -102,7 +104,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp">
 
                 <com.google.android.material.materialswitch.MaterialSwitch
@@ -117,7 +119,36 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/floating_back_button"
+                        android:textSize="18sp" />
+
+                    <Spinner
+                        android:id="@+id/floatingBackButtonSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:entries="@array/floating_back_button_entries"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp"
                 app:contentPaddingBottom="12dp"
                 app:contentPaddingTop="12dp">
@@ -187,7 +218,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp"
                 app:contentPaddingBottom="12dp"
                 app:contentPaddingTop="12dp">
@@ -289,7 +320,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp"
                 app:contentPaddingBottom="12dp"
                 app:contentPaddingTop="12dp">
@@ -378,7 +409,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp"
                 app:contentPaddingBottom="12dp"
                 app:contentPaddingTop="12dp">
@@ -499,7 +530,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginVertical="8dp"
                 app:contentPadding="16dp"
                 app:contentPaddingBottom="12dp"
                 app:contentPaddingTop="12dp">

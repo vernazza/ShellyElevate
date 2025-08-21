@@ -16,6 +16,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
@@ -26,6 +27,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.rapierxbox.shellyelevatev2.Constants.BACK_BUTTON_NEVER
 import me.rapierxbox.shellyelevatev2.Constants.INTENT_SETTINGS_CHANGED
 import me.rapierxbox.shellyelevatev2.Constants.SHARED_PREFERENCES_NAME
 import me.rapierxbox.shellyelevatev2.Constants.SP_AUTOMATIC_BRIGHTNESS
@@ -45,6 +47,7 @@ import me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_DELAY
 import me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_ENABLED
 import me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_ID
 import me.rapierxbox.shellyelevatev2.Constants.SP_SCREEN_SAVER_MIN_BRIGHTNESS
+import me.rapierxbox.shellyelevatev2.Constants.SP_SHOW_BACK_BUTTON
 import me.rapierxbox.shellyelevatev2.Constants.SP_SWITCH_ON_SWIPE
 import me.rapierxbox.shellyelevatev2.Constants.SP_WAKE_ON_PROXIMITY
 import me.rapierxbox.shellyelevatev2.Constants.SP_WEBVIEW_URL
@@ -91,7 +94,8 @@ class SettingsFragment : Fragment() {
                         true
                     }
 
-                    R.id.action_restart -> {
+                    R.id.action_reboot -> {
+                        //We have to call this explicitally becase the rebot could kill the activity without the regular lifecycle
                         saveSettings()
                         try {
                             Runtime.getRuntime().exec("reboot")
@@ -102,10 +106,7 @@ class SettingsFragment : Fragment() {
                     }
 
                     R.id.action_exit -> {
-                        if (checkAccessibilityPermission()) {
-                            requireActivity().moveTaskToBack(true)
-                            requireActivity().finishAffinity()
-                        }
+                        doExit()
                         true
                     }
 
@@ -149,6 +150,28 @@ class SettingsFragment : Fragment() {
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(backButtonCallback)
+    }
+
+    private val backButtonCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) { // 'true' means enabled initially
+        override fun handleOnBackPressed() {
+            if (binding.liteMode.isChecked) {
+                //If we are in lite mode, we must exit the app, not go to the webview
+                doExit()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
+            }
+        }
+    }
+
+    private fun doExit() {
+        if (checkAccessibilityPermission()) {
+            requireActivity().moveTaskToBack(true)
+            requireActivity().finishAffinity()
+        }
     }
 
     override fun onResume() {
@@ -169,6 +192,9 @@ class SettingsFragment : Fragment() {
         }
         //Functional mode
         binding.liteMode.isChecked = mSharedPreferences.getBoolean(SP_LITE_MODE, false)
+
+        //Floating back button mode
+        binding.floatingBackButtonSpinner.setSelection(mSharedPreferences.getInt(SP_SHOW_BACK_BUTTON, BACK_BUTTON_NEVER))
 
         //WebView
         binding.webviewURL.setText(ServiceHelper.getWebviewUrl())
@@ -329,6 +355,9 @@ class SettingsFragment : Fragment() {
             // device
             putString(SP_DEVICE, selectedDevice.modelName)
 
+            //Back button
+            putInt(SP_SHOW_BACK_BUTTON, binding.floatingBackButtonSpinner.selectedItemPosition)
+
             //Functional mode
             putBoolean(SP_LITE_MODE, binding.liteMode.isChecked)
 
@@ -375,6 +404,9 @@ class SettingsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        backButtonCallback.remove()
+
         _binding = null
     }
 
@@ -398,13 +430,19 @@ class SettingsFragment : Fragment() {
 
     private fun checkAccessibilityPermission(): Boolean {
         val act = activity ?: return false
+
+        if (binding.floatingBackButtonSpinner.selectedItemPosition == BACK_BUTTON_NEVER)
+            return true
+
         act.startService(Intent(act, FloatingBackButtonService::class.java))
+
         if (!Settings.canDrawOverlays(act)) {
             Toast.makeText(act, "Please, grant overlay permission to show the floating back button", Toast.LENGTH_LONG).show()
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, "package:${act.packageName}".toUri())
             startActivity(intent)
             return false
         }
+
         if (!BackAccessibilityService.isAccessibilityEnabled(act)) {
             Toast.makeText(act, "Please, grant accessibility permission to use the floating back button", Toast.LENGTH_LONG).show()
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
