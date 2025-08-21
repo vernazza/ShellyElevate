@@ -10,6 +10,7 @@ import android.content.SharedPreferences
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -81,6 +82,12 @@ class FloatingBackButtonService : Service() {
 
     @SuppressLint("ClickableViewAccessibility")
     fun showFloatingButton() {
+
+        if (!Settings.canDrawOverlays(this)) {
+            Log.w("FloatingBackButtonService", "Can't draw overlays without permission")
+            return
+        }
+
         //This overrides pause status
         wasVisibleBeforePause = true
 
@@ -154,6 +161,7 @@ class FloatingBackButtonService : Service() {
         if (BackAccessibilityService.isAccessibilityEnabled(this)) {
             sendBroadcast(Intent(BackAccessibilityService.ACTION_BACK))
         } else {
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             Toast.makeText(this, getString(R.string.accessibility_service_not_enabled), Toast.LENGTH_SHORT).show()
         }
     }
