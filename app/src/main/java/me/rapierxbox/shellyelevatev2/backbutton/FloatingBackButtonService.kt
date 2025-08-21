@@ -135,7 +135,11 @@ class FloatingBackButtonService : Service() {
                     val dy = (event.rawY - initialTouchY).toInt()
                     layoutParams.x = initialX + dx
                     layoutParams.y = initialY + dy
-                    windowManager.updateViewLayout(floatingView, layoutParams)
+
+                    floatingView?.let {
+                        windowManager.updateViewLayout(it, layoutParams)
+                    }
+
                     if (dx != 0 || dy != 0) isClick = false
                     true
                 }
