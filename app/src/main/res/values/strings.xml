@@ -47,4 +47,6 @@
     <string name="you_have_latest_version">Application already updated</string>
     <string name="update">Update</string>
     <string name="not_now">Not now</string>
+    <string name="permission_overlay_rationale">To enable the floating back button overlay, you need to grant overlay permission in the next screen.\nOtherwise you need to disable the \"Floating Back Button\" option.\n\nPlease, note that after enabling the permission you will not be able to exit the settings screen. This is the trick:\n• give the permission\n• swipe left-to-right to open menu\n• tap on App\n• scroll down and tap on Settings\n• tap on terminate</string>
+    <string name="permission_accessibility_rationale">To enable the floating back button you need to grant accessibility permission in the next screen.\nOtherwise you need to disable the \"Floating Back Button\" option.</string>
 </resources>

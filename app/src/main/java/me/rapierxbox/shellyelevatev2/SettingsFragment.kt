@@ -24,6 +24,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -431,21 +432,25 @@ class SettingsFragment : Fragment() {
     private fun checkAccessibilityPermission(): Boolean {
         val act = activity ?: return false
 
-        if (binding.floatingBackButtonSpinner.selectedItemPosition == BACK_BUTTON_NEVER)
-            return true
-
-        act.startService(Intent(act, FloatingBackButtonService::class.java))
+        if (binding.floatingBackButtonSpinner.selectedItemPosition == BACK_BUTTON_NEVER) return true
 
         if (!Settings.canDrawOverlays(act)) {
-            Toast.makeText(act, "Please, grant overlay permission to show the floating back button", Toast.LENGTH_LONG).show()
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, "package:${act.packageName}".toUri())
-            startActivity(intent)
+            //We should be here only if user did not install the apk with -g parameter
+            MaterialAlertDialogBuilder(act).setMessage(getString(R.string.permission_overlay_rationale)).setPositiveButton(android.R.string.ok, { _, _ ->
+                act.startService(Intent(act, FloatingBackButtonService::class.java))
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, "package:${act.packageName}".toUri())
+                startActivity(intent)
+            }).setNegativeButton(android.R.string.cancel, null).show()
+
             return false
         }
 
         if (!BackAccessibilityService.isAccessibilityEnabled(act)) {
-            Toast.makeText(act, "Please, grant accessibility permission to use the floating back button", Toast.LENGTH_LONG).show()
-            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            MaterialAlertDialogBuilder(act).setMessage(getString(R.string.permission_accessibility_rationale)).setPositiveButton(android.R.string.ok, { _, _ ->
+                act.startService(Intent(act, FloatingBackButtonService::class.java))
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }).setNegativeButton(android.R.string.cancel, null).show()
+
             return false
         }
 
