@@ -13,7 +13,6 @@ public class Constants {
     public static final String SP_SHOW_BACK_BUTTON = "backButtonOverlay";
     public static final int BACK_BUTTON_NEVER = 0;
     public static final int BACK_BUTTON_LITE = 1;
-    public static final int BACK_BUTTON_ALWAYS = 2;
 
     //IO SP Keys
     public static final String SP_SWITCH_ON_SWIPE = "switchOnSwipe";

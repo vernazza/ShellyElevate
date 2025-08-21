@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.net.http.SslError
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.SoundEffectConstants
 import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -25,6 +26,7 @@ import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mScreenSaverManage
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSharedPreferences
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mShellyElevateJavascriptInterface
 import me.rapierxbox.shellyelevatev2.ShellyElevateApplication.mSwipeHelper
+import me.rapierxbox.shellyelevatev2.backbutton.FloatingBackButtonService
 import me.rapierxbox.shellyelevatev2.databinding.MainActivityBinding
 import me.rapierxbox.shellyelevatev2.helper.ServiceHelper
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -68,6 +70,7 @@ class MainActivity : ComponentActivity() {
                 }
 
                 if (clicksButtonLeft == 10) {
+                    binding.settingButtonOverlayLeft.playSoundEffect(SoundEffectConstants.CLICK)
                     startActivity(Intent(this, SettingsActivity::class.java))
 
                     clicksButtonRight = 0
@@ -99,9 +102,7 @@ class MainActivity : ComponentActivity() {
             webViewClient = object : WebViewClient() {
                 @SuppressLint("WebViewClientOnReceivedSslError")
                 override fun onReceivedSslError(
-                    view: WebView?,
-                    handler: SslErrorHandler?,
-                    error: SslError?
+                    view: WebView?, handler: SslErrorHandler?, error: SslError?
                 ) {
                     if (mSharedPreferences.getBoolean(SP_IGNORE_SSL_ERRORS, false)) {
                         handler?.proceed()
@@ -119,8 +120,7 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         //This will reload the screen after the screenSaver.
-        if (binding.myWebView.originalUrl?.toHttpUrlOrNull() != ServiceHelper.getWebviewUrl().toHttpUrlOrNull())
-            binding.myWebView.loadUrl(ServiceHelper.getWebviewUrl())
+        if (binding.myWebView.originalUrl?.toHttpUrlOrNull() != ServiceHelper.getWebviewUrl().toHttpUrlOrNull()) binding.myWebView.loadUrl(ServiceHelper.getWebviewUrl())
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -131,26 +131,32 @@ class MainActivity : ComponentActivity() {
         binding = MainActivityBinding.inflate(layoutInflater) // Inflate the binding
         setContentView(binding.root) // Set the content view using binding.root
 
+        //Make sure to hide the back button (Back button could be visible now if NOT in lite mode, but the user exit from the app and launched it from the launcher
+        Intent(this, FloatingBackButtonService::class.java).apply {
+            setAction(FloatingBackButtonService.HIDE_FLOATING_BUTTON)
+            startService(this)
+        }
+
         //Show settings if they haven't been shown before or if we selected LITE MODE
-        if (!mSharedPreferences.getBoolean(SP_SETTINGS_EVER_SHOWN, false) || mSharedPreferences.getBoolean(SP_LITE_MODE, false))
+        if (!mSharedPreferences.getBoolean(SP_SETTINGS_EVER_SHOWN, false) || mSharedPreferences.getBoolean(SP_LITE_MODE, false)) {
             startActivity(Intent(this, SettingsActivity::class.java))
+        }
 
-            configureWebView()
-            setupSettingsButtons()
+        configureWebView()
+        setupSettingsButtons()
 
-            binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
-                mSwipeHelper.onTouchEvent(this, event)
-                mScreenSaverManager.onTouchEvent(event)
-                binding.myWebView.onTouchEvent(event)
+        binding.swipeDetectionOverlay.setOnTouchListener { _, event ->
+            mSwipeHelper.onTouchEvent(this, event)
+            mScreenSaverManager.onTouchEvent(event)
+            binding.myWebView.onTouchEvent(event)
 
-                return@setOnTouchListener true
-            }
+            return@setOnTouchListener true
+        }
 
-            LocalBroadcastManager.getInstance(this).apply {
-                registerReceiver(settingsChangedBroadcastReceiver, IntentFilter(INTENT_SETTINGS_CHANGED))
-                registerReceiver(webviewJavascriptInjectorBroadcastReceiver, IntentFilter(INTENT_WEBVIEW_INJECT_JAVASCRIPT))
-            }
-
+        LocalBroadcastManager.getInstance(this).apply {
+            registerReceiver(settingsChangedBroadcastReceiver, IntentFilter(INTENT_SETTINGS_CHANGED))
+            registerReceiver(webviewJavascriptInjectorBroadcastReceiver, IntentFilter(INTENT_WEBVIEW_INJECT_JAVASCRIPT))
+        }
     }
 
     override fun onDestroy() {

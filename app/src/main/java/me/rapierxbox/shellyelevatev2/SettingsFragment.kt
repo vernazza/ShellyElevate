@@ -454,6 +454,8 @@ class SettingsFragment : Fragment() {
             return false
         }
 
+        act.startService(Intent(act, FloatingBackButtonService::class.java))
+
         return true
     }
 

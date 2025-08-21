@@ -3,7 +3,6 @@
     <string-array name="floating_back_button_entries">
         <item>Never</item>
         <item>While in other apps</item>
-        <item>Always</item>
     </string-array>
 
 </resources>

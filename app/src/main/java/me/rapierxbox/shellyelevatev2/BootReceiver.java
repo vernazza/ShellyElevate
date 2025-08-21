@@ -1,7 +1,6 @@
 package me.rapierxbox.shellyelevatev2;
 
 import static android.content.Context.MODE_PRIVATE;
-import static me.rapierxbox.shellyelevatev2.Constants.BACK_BUTTON_ALWAYS;
 import static me.rapierxbox.shellyelevatev2.Constants.BACK_BUTTON_NEVER;
 import static me.rapierxbox.shellyelevatev2.Constants.SHARED_PREFERENCES_NAME;
 import static me.rapierxbox.shellyelevatev2.Constants.SP_LITE_MODE;
@@ -39,12 +38,6 @@ public class BootReceiver extends BroadcastReceiver {
                 Log.i("ShellyElevateV2", "Starting MainActivity");
                 Intent activityIntent = new Intent(context, MainActivity.class);
                 context.startActivity(activityIntent);
-
-                if (preferences.getInt(SP_SHOW_BACK_BUTTON, BACK_BUTTON_NEVER) == BACK_BUTTON_ALWAYS) {
-                    Intent backButtonIntent = new Intent(context, FloatingBackButtonService.class);
-                    backButtonIntent.setAction(FloatingBackButtonService.SHOW_FLOATING_BUTTON);
-                    context.startService(backButtonIntent);
-                }
             }
         }
     }
